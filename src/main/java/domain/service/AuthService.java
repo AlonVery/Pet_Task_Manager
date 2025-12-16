@@ -29,8 +29,10 @@ public class AuthService {
     public boolean login(String name, String rawPassword) {
         User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found"));
         if (!user.isPasswordValid(rawPassword, encoder)) {
-            throw new RuntimeException("Invalid password");
+            System.out.println("For this user: " + name  + " invalid password" +  rawPassword);
+            return false;
         }
+        System.out.println("User "+ name + " logged in successfully!");
         return true;
     }
 
