@@ -1,28 +1,24 @@
 package domain.service;
 
 import domain.model.user.User;
-import domain.model.user.UserRole;
 import domain.repository.PasswordEncoder;
 import domain.repository.UserRepositoryImpl;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class AuthService {
     private final UserRepositoryImpl userRepository;
-    private final User userInstance = new User();
+    private final UserService userService;
     final PasswordEncoder encoder;
-
-    public AuthService(UserRepositoryImpl userRepository, PasswordEncoder encoder) {
-        this.userRepository = userRepository;
-        this.encoder = encoder;
-    }
 
     public User register(
             String userName,
             String email,
             String passwordHash) {
-        User user = User.createUser(userName, email, passwordHash, UserRole.USER, encoder);
-        userRepository.save(user);
+        User user = userRepository.createDefaultUser(userName, email, passwordHash, encoder);
         // log registration
         System.out.println("User register : " + userName);
+        userService.save(user);
         return user;
     }
 

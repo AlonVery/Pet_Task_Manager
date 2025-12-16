@@ -1,7 +1,6 @@
 package domain.service;
 
 import domain.model.user.User;
-import domain.model.user.UserRole;
 import domain.repository.PasswordEncoder;
 import domain.repository.UserRepositoryImpl;
 import infra.security.PasswordEncoderBCrypt;
@@ -12,7 +11,6 @@ import java.util.UUID;
 public class UserService {
     private final UserRepositoryImpl userRepository;
     PasswordEncoder encoder = new PasswordEncoderBCrypt();
-
 
     public UserService(UserRepositoryImpl userRepository) {
         this.userRepository = userRepository;
@@ -26,10 +24,14 @@ public class UserService {
                 || userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("User already exists");
         }
-        User user = userRepository.create(userName, email, passwordHash, encoder);
-        userRepository.save(user);
-        return user;
+        return userRepository.createDefaultUser(userName, email, passwordHash, encoder);
     }
+
+    public boolean save(User user) {
+        userRepository.save(user);
+        return true;
+    }
+
 
     public void delete(UUID userId) {
         User user = userRepository.findById(userId)

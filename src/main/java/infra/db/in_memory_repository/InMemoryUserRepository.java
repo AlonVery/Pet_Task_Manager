@@ -1,5 +1,6 @@
 package infra.db.in_memory_repository;
 
+import domain.exception.UserAlreadyExistException;
 import domain.model.user.User;
 import domain.model.user.UserRole;
 import domain.model.user.UserStatus;
@@ -15,20 +16,18 @@ public class InMemoryUserRepository implements UserRepositoryImpl {
     private final Object lock =  new Object();
 
     @Override
-    public User create(String userName, String email, String passwordHash, PasswordEncoder encoder) {
-        User user = new User();
-        user.createUser(userName, email, passwordHash, UserRole.USER, encoder);
-        save(user);
-        return user;
+    public User createDefaultUser(String userName, String email, String passwordHash, PasswordEncoder encoder) {
+        return User.createUser(userName, email, passwordHash, UserRole.USER, encoder);
     }
 
     @Override
-    public void save(User user) {
-        if (existsByEmail(user.getEmail())) { // правильно проверяем через метод existsByEmail
-            throw new IllegalArgumentException("User already exists");
+    public boolean save(User user) {
+        if (existsByEmail(user.getEmail())) {
+            throw new UserAlreadyExistException("User already exists");
         }
         synchronized (lock) {
             users.put(user.getUserId(), user);
+            return true;
         }
     }
 

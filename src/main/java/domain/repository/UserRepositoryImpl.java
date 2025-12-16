@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface UserRepositoryImpl {
 
-    User create(String userName, String email, String passwordHash, PasswordEncoder encoder);
+    User createDefaultUser(String userName, String email, String passwordHash, PasswordEncoder encoder);
 
-    void save(User user);
+    boolean save(User user);
 
     void delete(User user);
 
