@@ -1,7 +1,7 @@
 package domain.model.user;
 
 import domain.repository.PasswordEncoder;
-import infra.security.PasswordEncoderBCrypt;
+import infra.security.PasswordHash;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -15,54 +15,54 @@ import java.util.UUID;
 
 public class User {
     @Getter
-    private UUID userId;
+    private static UUID userId;
     @Getter
-    private final String userName;
+    private String userName;
     @Getter
-    private final String email;
+    private String email;
     @Getter
-    private String passwordHash;
+    private PasswordHash passwordHash;
     @Getter
     private UserStatus userStatus;
     @Getter
-    private final UserRole userRole;
+    private UserRole userRole;
     @Getter
-    private final Instant createdAt;
+    private Instant createdAt;
     @Getter
     private Instant updatedAt;
 
-    private Object lock;
-    PasswordHash ph;
-    PasswordEncoderBCrypt peBCrypt;
+    private final Object lock =  new Object();
 
-
-    private User(UUID userId,
-                 String userName,
-                 String email,
-                 String passwordHash,
-                 UserStatus userStatus,
-                 UserRole userRole) {
+    public User(UUID userId,
+                String userName,
+                String email,
+                PasswordHash passwordHash,
+                UserStatus userStatus,
+                UserRole userRole) {
         this.userId = Objects.requireNonNull(userId);
         this.userName = Objects.requireNonNull(userName);
         this.email = Objects.requireNonNull(email);
-        this.passwordHash = Objects.requireNonNull(passwordHash);
+        this.passwordHash = passwordHash;
         this.userStatus = Objects.requireNonNull(userStatus);
         this.userRole = Objects.requireNonNull(userRole);
         this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
     }
 
+    public User() {}
+
     /* --------- Фабрика --------- */
-    public User createUser(
+    public static User createUser(
             String userName,
             String email,
-            String passwordHash,
-            UserRole userRole) {
+            String rawPassword,
+            UserRole userRole,
+            PasswordEncoder encoder) {
         return new User(
-                this.userId = UUID.randomUUID(),
+                userId = UUID.randomUUID(),
                 userName,
                 email,
-                ph.fromRow(passwordHash, peBCrypt).toString(),
+                PasswordHash.fromRaw(rawPassword, encoder),
                 UserStatus.ACTIVE,
                 userRole);
     }
@@ -78,16 +78,24 @@ public class User {
         }
     }
 
-    public boolean isPasswordValid(User user, String rawPassword) {
-       return ph.matches(rawPassword, user.passwordHash);
+    public boolean isPasswordValid(String rawPassword, PasswordEncoder encoder) {
+       return passwordHash.matches(rawPassword,  encoder);
     }
 
-    public void changeUserPassword(User user, String newPassword) {
+    public void changeUserPassword(User user, String newPassword, PasswordEncoder encoder) {
         if (user.userRole != UserRole.ADMIN) {
             throw new IllegalArgumentException("Only admin can change user status");
         }
         synchronized (lock) {
-            this.passwordHash = ph.fromRow(newPassword, peBCrypt).toString();
+            this.passwordHash = PasswordHash.fromRaw(newPassword, encoder);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                '}';
     }
 }

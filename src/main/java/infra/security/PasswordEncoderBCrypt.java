@@ -10,6 +10,9 @@ public class PasswordEncoderBCrypt implements PasswordEncoder {
     }
 
     public boolean checkPassword(String rawPasswd, String hashedPasswd) {
-        return BCrypt.checkpw(rawPasswd, hashedPasswd);
+        String x = hashPassword(rawPasswd);
+        return x.equals(hashedPasswd);
     }
+
+
 }

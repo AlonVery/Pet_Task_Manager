@@ -1,22 +1,30 @@
 package infra.db.in_memory_repository;
 
 import domain.model.user.User;
+import domain.model.user.UserRole;
 import domain.model.user.UserStatus;
+import domain.repository.PasswordEncoder;
 import domain.repository.UserRepositoryImpl;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryUserRepository implements UserRepositoryImpl {
 
     private final Map<UUID, User> users = new ConcurrentHashMap<>();
-    private Object lock;
+    private final Object lock =  new Object();
+
+    @Override
+    public User create(String userName, String email, String passwordHash, PasswordEncoder encoder) {
+        User user = new User();
+        user.createUser(userName, email, passwordHash, UserRole.USER, encoder);
+        save(user);
+        return user;
+    }
 
     @Override
     public void save(User user) {
-        if (users.containsValue(user.getEmail())) {
+        if (existsByEmail(user.getEmail())) { // правильно проверяем через метод existsByEmail
             throw new IllegalArgumentException("User already exists");
         }
         synchronized (lock) {
@@ -69,4 +77,8 @@ public class InMemoryUserRepository implements UserRepositoryImpl {
         return users.values().stream().anyMatch(u -> u.getUserName().equals(username));
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users.values());
+    }
 }

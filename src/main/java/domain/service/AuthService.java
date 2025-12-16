@@ -2,34 +2,36 @@ package domain.service;
 
 import domain.model.user.User;
 import domain.model.user.UserRole;
+import domain.repository.PasswordEncoder;
 import domain.repository.UserRepositoryImpl;
 
 public class AuthService {
-    private UserService userService;
     private final UserRepositoryImpl userRepository;
-    private User userInstance;
+    private final User userInstance = new User();
+    final PasswordEncoder encoder;
 
-    public AuthService(UserRepositoryImpl userRepository) {
+    public AuthService(UserRepositoryImpl userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
-    public void register(
+    public User register(
             String userName,
             String email,
-            String passwordHash
-    ) {
-        User registeredUser = userService.create(userName, email, passwordHash, UserRole.USER);
-        userRepository.save(registeredUser);
+            String passwordHash) {
+        User user = User.createUser(userName, email, passwordHash, UserRole.USER, encoder);
+        userRepository.save(user);
         // log registration
+        System.out.println("User register : " + userName);
+        return user;
     }
 
-    public boolean login(String name, String password) {
-        if(userRepository.existsByUsername(name)) {
-            throw new IllegalArgumentException("Username already exists");
-        }
+    public boolean login(String name, String rawPassword) {
         User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found"));
-        return userInstance.isPasswordValid(user, password);
-        // log login
+        if (!user.isPasswordValid(rawPassword, encoder)) {
+            throw new RuntimeException("Invalid password");
+        }
+        return true;
     }
 
 }
