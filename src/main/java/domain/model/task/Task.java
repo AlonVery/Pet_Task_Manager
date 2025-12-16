@@ -13,18 +13,11 @@ import java.util.*;
 @NoArgsConstructor(force = true)
 public class Task {
     private final UUID taskId;
-
-    @Setter
     private User taskCreator;
-    @Setter
     private String taskTitle;
-
+    private Instant updatedAt;
     private TaskStatus taskStatus;
     private final Instant createdAt;
-
-    @Setter
-    private Instant updatedAt;
-
     private static final List<DomainEvent> events = new ArrayList<>();
 
     protected Task(UUID taskId, User taskCreator, String taskTitle) {
@@ -41,7 +34,7 @@ public class Task {
         if (taskStatus != TaskStatus.CREATED) throw new IllegalStateException("Task must be in CREATED state");
         if (!taskCreator.equals(userStarted)) {
             throw new IllegalAccessException("Not valid author");
-        };
+        }
         taskStatus = TaskStatus.STARTED;
         updatedAt = Instant.now();
         events.add(new TaskStartedEvent(taskId, taskCreator));
@@ -56,6 +49,20 @@ public class Task {
         taskStatus = TaskStatus.COMPLETED;
         updatedAt = Instant.now();
         events.add(new TaskCompletedEvent(taskId, taskCreator));
+    }
+
+    public void changeCreator(User user) {
+        if (!taskCreator.equals(user)) {
+            taskCreator = user;
+            updatedAt = Instant.now();
+        }
+    }
+
+    public void changeTitle(String title) {
+        if (!taskTitle.equals(title)) {
+            taskTitle = title;
+            updatedAt = Instant.now();
+        }
     }
 
     @Override
@@ -73,6 +80,7 @@ public class Task {
         return Objects.hash(taskId, taskCreator, createdAt, updatedAt);
     }
 
+    // для дебага - потенциально удалить
     @Override
     public String toString() {
         return "Task{" +
@@ -82,6 +90,6 @@ public class Task {
                 ", taskStatus=" + taskStatus + "\n" +
                 ", createdAt=" + createdAt + "\n" +
                 ", updatedAt=" + updatedAt +
-                '}';
+                '}' + "\n";
     }
 }

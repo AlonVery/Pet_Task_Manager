@@ -3,6 +3,7 @@ package domain.model;
 import domain.model.task.Task;
 import domain.model.task.TaskFactory;
 import domain.model.user.User;
+import domain.model.user.UserRole;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -18,87 +19,87 @@ public class Project {
 
     private TaskFactory taskFactory;
 
+    private static final int MAX_TASKS = 100;
+
     private final List<Task> taskList = new ArrayList<>();
 
     public Project(String name, TaskFactory tf) {
         this.projectName = name;
-        this.taskFactory = tf;
+        this.taskFactory = Optional.ofNullable(tf).orElse(new TaskFactory());
         this.projectId = UUID.randomUUID();
     }
 
+    // Empty project
     public Project(String name) {
         this.projectName = name;
         this.projectId = UUID.randomUUID();
     }
 
     public void createTask(User user, String title) {
-        if (taskList.size() >= 100) {
+        if (taskList.size() >= MAX_TASKS) {
             throw new IllegalStateException("In project cannot add more than 100 tasks");
         }
-        Task task = taskFactory.createTask(user, title);
-        if (!taskList.contains(task.getTaskId())) {
-            Task taskToAdd = taskFactory.createTask(task.getTaskCreator(), task.getTaskTitle());
-
-            Optional<Task> taskOptional = Optional.ofNullable(taskToAdd);
-            taskOptional.ifPresent(taskList::add);
-        } else {
-            throw new IllegalStateException("Task already exists");
-        }
+        Task task = Objects.requireNonNull(taskFactory.createTask(user, title), "TaskFactory returned null");
+        taskList.add(task);
     }
 
-    public void startTask(UUID taskId) {
+    public void startTask(UUID taskId, User user) {
         hasTaskIdFromProject(taskId);
         Task task = findTask(taskId);
-        task.startTask(task.getTaskCreator());
+        task.startTask(user);
     }
 
-    public void completeTask(UUID taskId) {
+    public void completeTask(UUID taskId, User user) {
         hasTaskIdFromProject(taskId);
         Task task = findTask(taskId);
-        task.completedTask(task.getTaskCreator());
+        task.completedTask(user);
     }
 
     public List<Task> getAllTasks() {
         return List.copyOf(taskList);
     }
 
-    public void deleteTask(UUID taskId) {
+    public boolean deleteTask(UUID taskId, User user) {
         hasTaskIdFromProject(taskId);
-        taskList.stream()
-                .filter(task -> task.getTaskId().equals(taskId))
-                .forEach(taskList::remove);
+        if (user.getUserRole() == UserRole.MANAGER || user.getUserRole() == UserRole.USER) {
+            boolean removed = taskList.removeIf(t -> t.getTaskId().equals(taskId));
+            if (!removed) {
+                throw new IllegalStateException("Task with id " + taskId + " not found");
+            }
+            return true;
+        }
+        throw new IllegalStateException("User cannot delete task, user role" + user.getUserRole() + " is not admin");
     }
 
-    private boolean hasTaskIdFromProject(UUID taskId) {
-        try {
-            if (findTask(taskId) != null) {
-                taskList.stream().filter(t -> t.getTaskId().equals(taskId)).findFirst().orElseThrow();
-                return true;
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private void hasTaskIdFromProject(UUID taskId) {
+        taskList.stream()
+                .filter(t -> t.getTaskId().equals(taskId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Task not found in project"));
     }
 
     public Task findTask(UUID taskId) {
         return taskList.stream().filter(t -> t.getTaskId().equals(taskId)).findFirst().orElseThrow();
     }
 
+    public boolean existsTask(UUID taskId) {
+        return taskList.stream()
+                .anyMatch(t -> t.getTaskId().equals(taskId));
+    }
+
     public Task updateUserFromTask(UUID taskId, User user) {
         Task task = findTask(taskId);
-        task.setTaskCreator(user);
-        task.setUpdatedAt(Instant.now());
+        task.changeCreator(user);
         return task;
     }
 
-    public Task updateTitleTask(UUID taskId, String title) {
+    public Task updateTitleTask(UUID taskId, String title, User user) {
         Task task = findTask(taskId);
-        task.setTaskTitle(title);
-        task.setUpdatedAt(Instant.now());
+        task.changeTitle(title);
         return task;
     }
 
+    // для дебага - потенциально удалить
     @Override
     public String toString() {
         return "Project{" + "projectId=" + projectId + ", projectName='" + projectName + "\n" + ", taskList=" + taskList + "\n" + '}';
