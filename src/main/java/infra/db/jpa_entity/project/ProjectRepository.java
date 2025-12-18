@@ -17,7 +17,7 @@ public class ProjectRepository implements ProjectRepositoryImpl {
 
     @Override
     public Optional<Project> findProjectById(UUID projectId) {
-        return localProjectDB.values().stream().filter(p -> p.getProjectId().equals(projectId)).findFirst();
+        return Optional.ofNullable(localProjectDB.get(projectId));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ProjectRepository implements ProjectRepositoryImpl {
     @Override
     public boolean deleteProject(UUID projectId) {
         if (localProjectDB.containsKey(projectId)) {
-            localProjectDB.remove(findProjectById(projectId));
+            localProjectDB.remove(projectId);
             return true;
         }
         throw new ProjectNotFoundException(projectId);
@@ -36,10 +36,8 @@ public class ProjectRepository implements ProjectRepositoryImpl {
 
     @Override
     public void saveProject(Project project) {
-        if (project != null && !localProjectDB.containsKey(project.getProjectId())) {
-            localProjectDB.put(project.getProjectId(), project);
-        }
-        throw new ProjectNotFoundException(Objects.requireNonNull(project).getProjectId());
+        localProjectDB.put(project.getProjectId(), project);
+        System.out.println("Saving project " + project.getProjectId());
     }
 
     @Override
@@ -47,9 +45,15 @@ public class ProjectRepository implements ProjectRepositoryImpl {
         localProjectDB.replace(project.getProjectId(), project);
     }
 
-
     public List<Project> getAllProjects() {
         return List.copyOf(localProjectDB.values());
     }
 
+    @Override
+    public String toString() {
+        return "ProjectRepository{" +
+                "localProjectDB=" + localProjectDB +
+                ", taskFactory=" + taskFactory +
+                '}';
+    }
 }

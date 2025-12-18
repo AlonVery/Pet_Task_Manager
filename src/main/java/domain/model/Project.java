@@ -17,21 +17,15 @@ public class Project {
     @Getter
     private final String projectName;
 
-    private TaskFactory taskFactory;
+    private final TaskFactory taskFactory;
 
     private static final int MAX_TASKS = 100;
 
     private final List<Task> taskList = new ArrayList<>();
 
-    public Project(String name, TaskFactory tf) {
+    public Project(String name, TaskFactory taskFactory) {
         this.projectName = name;
-        this.taskFactory = Optional.ofNullable(tf).orElse(new TaskFactory());
-        this.projectId = UUID.randomUUID();
-    }
-
-    // Empty project
-    public Project(String name) {
-        this.projectName = name;
+        this.taskFactory = Objects.requireNonNull(taskFactory);
         this.projectId = UUID.randomUUID();
     }
 
@@ -66,8 +60,9 @@ public class Project {
             if (!removed) {
                 throw new IllegalStateException("Task with id " + taskId + " not found");
             }
+            return;
         }
-        throw new IllegalStateException("User cannot delete task, user role" + user.getUserRole() + " is not admin");
+        throw new IllegalStateException("User cannot delete task, user role " + user.getUserRole());
     }
 
     private void hasTaskIdFromProject(UUID taskId) {
@@ -98,9 +93,9 @@ public class Project {
         return task;
     }
 
-    // для дебага - потенциально удалить
+    //#debug
     @Override
     public String toString() {
-        return "Project{" + "projectId=" + projectId + ", projectName='" + projectName + "\n" + ", taskList=" + taskList + "\n" + '}';
+        return "Project{" + "projectId=" + projectId + ", projectName='" + projectName + "`, taskList=" + taskList + '}';
     }
 }

@@ -1,56 +1,46 @@
 package infra.db.in_memory_repository;
 
-import domain.exception.UserAlreadyExistException;
 import domain.model.user.User;
-import domain.model.user.UserRole;
 import domain.model.user.UserStatus;
-import domain.repository.PasswordEncoder;
-import domain.repository.UserRepositoryImpl;
+import domain.repository.UserRepository;
+
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemoryUserRepository implements UserRepositoryImpl {
+public class InMemoryUserRepository implements UserRepository {
 
     private final Map<UUID, User> users = new ConcurrentHashMap<>();
-    private final Object lock =  new Object();
+    private final Map<String, UUID> emailIndex = new ConcurrentHashMap<>();
+    private final Map<String, UUID> usernameIndex = new ConcurrentHashMap<>();
+
 
     @Override
-    public User createDefaultUser(String userName, String email, String passwordHash, PasswordEncoder encoder) {
-        return User.createUser(userName, email, passwordHash, UserRole.USER, encoder);
+    public void save(User user) {
+        users.put(user.getUserId(), user);
+        emailIndex.put(user.getEmail(), user.getUserId());
+        usernameIndex.put(user.getUserName(), user.getUserId());
     }
 
     @Override
-    public boolean save(User user) {
-        if (existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistException("User already exists");
-        }
-        synchronized (lock) {
-            users.put(user.getUserId(), user);
-            return true;
-        }
-    }
-
-    @Override
-    public void delete(User user) {
-        if (users.containsKey(user.getUserId())) {
-            users.remove(user.getUserId());
+    public void deleteById(UUID userId) {
+        User removed = users.remove(userId);
+        if (removed != null) {
+            emailIndex.remove(removed.getEmail());
+            usernameIndex.remove(removed.getUserName());
         }
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        return users.values().stream().
-                filter(user -> user.getUserId().equals(id))
-                .findFirst();
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
         return users.values().stream()
-                .filter(u -> u.getEmail().equals(email))
+                .filter(u -> Objects.equals(u.getEmail(), email))
                 .findFirst();
-
     }
 
     @Override
@@ -78,6 +68,12 @@ public class InMemoryUserRepository implements UserRepositoryImpl {
 
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return List.copyOf(users.values());
+    }
+
+    public void clear() {
+        users.clear();
+        emailIndex.clear();
+        usernameIndex.clear();
     }
 }

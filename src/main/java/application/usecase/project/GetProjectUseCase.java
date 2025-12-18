@@ -7,7 +7,11 @@ import infra.db.jpa_entity.project.ProjectRepository;
 
 public class GetProjectUseCase implements UseCase<GetProjectCommand, Void> {
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
+
+    public GetProjectUseCase(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
     @Override
     public Void execute(GetProjectCommand command) {

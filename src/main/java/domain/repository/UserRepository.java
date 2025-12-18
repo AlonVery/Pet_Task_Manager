@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepositoryImpl {
+public interface UserRepository {
 
-    User createDefaultUser(String userName, String email, String passwordHash, PasswordEncoder encoder);
+    void save(User user);
 
-    boolean save(User user);
-
-    void delete(User user);
+    void deleteById(UUID userId);
 
     Optional<User> findById(UUID id);
 

@@ -1,1 +1,1 @@
-import domain.service.AuthService;import domain.service.UserService;import infra.db.in_memory_repository.InMemoryUserRepository;import infra.security.PasswordEncoderBCrypt;import infra.security.PasswordEncoderSha256;public class Main {    public static void main(String[] args) {    }}
+public class Main {    public static void main(String[] args) {    }}

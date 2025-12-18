@@ -9,7 +9,11 @@ import infra.db.jpa_entity.project.ProjectRepository;
 import java.util.UUID;
 
 public class AddTaskToProjectUseCase implements ProjectUseCase<CreateTaskCommand, Void> {
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
+
+    public AddTaskToProjectUseCase(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
     @Override
     public Void execute(CreateTaskCommand command, UUID projectId) {

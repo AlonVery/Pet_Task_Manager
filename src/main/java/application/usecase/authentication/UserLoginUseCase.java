@@ -3,20 +3,20 @@ package application.usecase.authentication;
 import application.command.authentication.LoginCommand;
 import application.usecase.usecaseimpl.UseCase;
 import domain.repository.PasswordEncoder;
-import domain.repository.UserRepositoryImpl;
+import domain.repository.UserRepository;
 import domain.service.AuthService;
-import domain.service.UserService;
-import infra.db.in_memory_repository.InMemoryUserRepository;
 
-public class UserLoginUseCase implements UseCase<LoginCommand, Void> {
+public class UserLoginUseCase implements UseCase<LoginCommand, Boolean> {
+    
+    private final AuthService authService;
 
-    private UserRepositoryImpl userRepository;
-    private PasswordEncoder encoder;
-    private final AuthService authService = new AuthService(userRepository, encoder);
+    public UserLoginUseCase(UserRepository userRepository, PasswordEncoder encoder) {
+        this.authService = new AuthService(userRepository, encoder);
+    }
 
     @Override
-    public Void execute(LoginCommand command) {
-        authService.login(command.username(), command.password());
-        return null;
+    public Boolean execute(LoginCommand command) {
+        System.out.println("UserLoginUseCase execute");
+        return authService.login(command.username(), command.password());
     }
 }

@@ -10,7 +10,7 @@ public class AuthenticationServiceTest {
     InMemoryUserRepository inMemoryUserRepository = new InMemoryUserRepository();
     PasswordEncoderSha256 passwordEncoderSha256 = new PasswordEncoderSha256();
     UserService userService = new UserService(inMemoryUserRepository);
-    AuthService authService = new AuthService(inMemoryUserRepository, userService, passwordEncoderSha256);
+    AuthService authService = new AuthService(inMemoryUserRepository, passwordEncoderSha256);
 
     @Test
     public void test1Test1() {
