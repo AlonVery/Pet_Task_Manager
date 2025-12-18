@@ -12,4 +12,8 @@ public interface ProjectRepositoryImpl {
 
     boolean deleteProject(UUID id);
 
+    void saveProject(Project project);
+
+    void updateProject(Project project);
+
 }

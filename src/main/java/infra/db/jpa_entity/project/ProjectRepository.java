@@ -6,6 +6,7 @@ import domain.model.task.TaskFactory;
 import domain.repository.ProjectRepositoryImpl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,9 +22,7 @@ public class ProjectRepository implements ProjectRepositoryImpl {
 
     @Override
     public Project createEmptyProject(String projectName) {
-        Project prjct = new Project(projectName);
-        localProjectDB.put(prjct.getProjectId(), prjct);
-        return prjct;
+        return new Project(projectName, taskFactory);
     }
 
     @Override
@@ -34,6 +33,20 @@ public class ProjectRepository implements ProjectRepositoryImpl {
         }
         throw new ProjectNotFoundException(projectId);
     }
+
+    @Override
+    public void saveProject(Project project) {
+        if (project != null && !localProjectDB.containsKey(project.getProjectId())) {
+            localProjectDB.put(project.getProjectId(), project);
+        }
+        throw new ProjectNotFoundException(Objects.requireNonNull(project).getProjectId());
+    }
+
+    @Override
+    public void updateProject(Project project) {
+        localProjectDB.replace(project.getProjectId(), project);
+    }
+
 
     public List<Project> getAllProjects() {
         return List.copyOf(localProjectDB.values());

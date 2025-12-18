@@ -59,14 +59,13 @@ public class Project {
         return List.copyOf(taskList);
     }
 
-    public boolean deleteTask(UUID taskId, User user) {
+    public void deleteTask(UUID taskId, User user) {
         hasTaskIdFromProject(taskId);
         if (user.getUserRole() == UserRole.MANAGER || user.getUserRole() == UserRole.USER) {
             boolean removed = taskList.removeIf(t -> t.getTaskId().equals(taskId));
             if (!removed) {
                 throw new IllegalStateException("Task with id " + taskId + " not found");
             }
-            return true;
         }
         throw new IllegalStateException("User cannot delete task, user role" + user.getUserRole() + " is not admin");
     }
@@ -93,7 +92,7 @@ public class Project {
         return task;
     }
 
-    public Task updateTitleTask(UUID taskId, String title, User user) {
+    public Task updateTitleTask(UUID taskId, String title) {
         Task task = findTask(taskId);
         task.changeTitle(title);
         return task;

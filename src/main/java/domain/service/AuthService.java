@@ -3,23 +3,35 @@ package domain.service;
 import domain.model.user.User;
 import domain.repository.PasswordEncoder;
 import domain.repository.UserRepositoryImpl;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
+
 public class AuthService {
     private final UserRepositoryImpl userRepository;
-    private final UserService userService;
-    final PasswordEncoder encoder;
+    private UserService userService;
+    private final PasswordEncoder encoder;
 
-    public User register(
+    public AuthService(UserRepositoryImpl userRepository, UserService userService, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.encoder = encoder;
+    }
+
+    public AuthService(UserRepositoryImpl userRepository, PasswordEncoder encoder) {
+        this.encoder = encoder;
+        this.userRepository = userRepository;
+    }
+
+    public void register(
             String userName,
             String email,
             String passwordHash) {
+        if(userRepository.existsByUsername(userName)) {
+            throw new IllegalArgumentException("Username already exists");
+        }
         User user = userRepository.createDefaultUser(userName, email, passwordHash, encoder);
         // log registration
         System.out.println("User register : " + userName);
         userService.save(user);
-        return user;
     }
 
     public boolean login(String name, String rawPassword) {

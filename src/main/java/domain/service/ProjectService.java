@@ -3,7 +3,6 @@ package domain.service;
 import domain.exception.ProjectEmptyException;
 import domain.exception.ProjectNotFoundException;
 import domain.model.Project;
-import domain.model.user.User;
 import infra.db.jpa_entity.project.ProjectRepository;
 import lombok.AllArgsConstructor;
 
@@ -33,6 +32,5 @@ public class ProjectService {
     public List<Project> getAllProjects() {
         return projectRepository.getAllProjects();
     }
-
 
 }
