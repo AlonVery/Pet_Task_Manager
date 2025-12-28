@@ -81,7 +81,6 @@ public class LocalControllerTest {
 
     @Test
     public void registerUserTest() {
-        ProjectLocalController controller = new ProjectLocalController(dispatcher);
         controller.registerUser("Alex", "Qwerty@erwe.er", "1234");
         controller.registerUser("Meg", "Q2werty@erwe.er", "1234");
         controller.registerUser("Max", "2@erwe.er", "1234");
@@ -93,7 +92,6 @@ public class LocalControllerTest {
 
     @Test
     public void loginUserTest() {
-        ProjectLocalController controller = new ProjectLocalController(dispatcher);
         controller.registerUser("Alex", "Qwe@r.ty", "1234");
         Assertions.assertTrue(controller.loginUser("Alex", "1234"));
     }
