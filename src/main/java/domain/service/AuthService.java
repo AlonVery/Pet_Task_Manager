@@ -15,12 +15,13 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public void register(String username, String email, String password) {
+    public User register(String username, String email, String password) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException("Email already in use");
         }
         User user = User.create(username, email, password, UserRole.USER, encoder);
         userRepository.save(user);
+        return user;
     }
 
     public boolean login(String name, String rawPassword) {
