@@ -1,4 +1,4 @@
-package controller;
+package usecases;
 
 import application.command.authentication.LoginCommand;
 import application.command.project_command.CreateProjectCommand;
@@ -23,21 +23,21 @@ import infra.db.jpa_entity.project.ProjectRepository;
 import infra.dispatcher.UseCaseDispatcher;
 import infra.security.PasswordEncoderSha256;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import web.controller.ProjectLocalController;
 
 import java.util.List;
 import java.util.Map;
 
-public class LocalControllerTest {
+public class UseCasesTest {
 
-    ProjectLocalController controller;
-    UseCaseDispatcher dispatcher;
+    static ProjectLocalController controller;
+    static UseCaseDispatcher dispatcher;
 
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         final UserRepository userRepository = new InMemoryUserRepository();
         final PasswordEncoder encoder = new PasswordEncoderSha256();
         ProjectRepository projectRepository = new ProjectRepository();

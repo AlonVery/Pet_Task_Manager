@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 public interface RegistrationUserMapper extends Mapper<RegisterUserDTORequest, RegisterCommand, RegisterUserDTOResponse>{
     RegistrationUserMapper instance =  Mappers.getMapper(RegistrationUserMapper.class);
 
-
     @Override
     RegisterCommand toCommand(RegisterUserDTORequest dto);
 
