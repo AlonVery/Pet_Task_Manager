@@ -38,51 +38,51 @@ public class SunNetHttpServerTest {
     static HttpServer server;
     static UserRegistrationUseCase registrationUseCase;
 
-    @BeforeAll
-    static void setUp() {
-        final UserRepository userRepository = new InMemoryUserRepository();
-        final PasswordEncoder encoder = new PasswordEncoderSha256();
-        registrationUseCase = new UserRegistrationUseCase(userRepository, encoder);
-        try {
-            server = HttpServer.create(new InetSocketAddress(0), 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        server.createContext("/users/registration", exchange -> {
-            if ("POST".equals(exchange.getRequestMethod())) {
-                try {
-                    // читаем тело запроса один раз
-                    String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+//    @BeforeAll
+//    static void setUp() {
+//        final UserRepository userRepository = new InMemoryUserRepository();
+//        final PasswordEncoder encoder = new PasswordEncoderSha256();
+//        registrationUseCase = new UserRegistrationUseCase(userRepository, encoder);
+//        try {
+//            server = HttpServer.create(new InetSocketAddress(0), 0);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        server.createContext("/users/registration", exchange -> {
+//            if ("POST".equals(exchange.getRequestMethod())) {
+//                try {
+//                    // читаем тело запроса один раз
+//                    String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+//
+//                    // вызываем контроллер
+//                    String responseBody = new RegistrationUserController(registrationUseCase).handle(requestBody);
+//
+//                    // отправляем ответ
+//                    exchange.getResponseHeaders().add("Content-Type", "application/json");
+//                    byte[] responseBytes = responseBody.getBytes(StandardCharsets.UTF_8);
+//                    exchange.sendResponseHeaders(201, responseBytes.length);
+//                    exchange.getResponseBody().write(responseBytes);
+//
+//                } catch (Exception e) {
+//                    String error = "{\"error\":\"" + e.getMessage() + "\"}";
+//                    exchange.getResponseHeaders().add("Content-Type", "application/json");
+//                    byte[] errorBytes = error.getBytes(StandardCharsets.UTF_8);
+//                    exchange.sendResponseHeaders(500, errorBytes.length);
+//                    exchange.getResponseBody().write(errorBytes);
+//
+//                } finally {
+//                    exchange.getResponseBody().close(); // закрываем поток в любом случае
+//                }
+//            }
+//        });
+//        server.start();
+//        System.out.println("Server started at http://localhost:8080");
+//    }
 
-                    // вызываем контроллер
-                    String responseBody = new RegistrationUserController(registrationUseCase).handle(requestBody);
-
-                    // отправляем ответ
-                    exchange.getResponseHeaders().add("Content-Type", "application/json");
-                    byte[] responseBytes = responseBody.getBytes(StandardCharsets.UTF_8);
-                    exchange.sendResponseHeaders(201, responseBytes.length);
-                    exchange.getResponseBody().write(responseBytes);
-
-                } catch (Exception e) {
-                    String error = "{\"error\":\"" + e.getMessage() + "\"}";
-                    exchange.getResponseHeaders().add("Content-Type", "application/json");
-                    byte[] errorBytes = error.getBytes(StandardCharsets.UTF_8);
-                    exchange.sendResponseHeaders(500, errorBytes.length);
-                    exchange.getResponseBody().write(errorBytes);
-
-                } finally {
-                    exchange.getResponseBody().close(); // закрываем поток в любом случае
-                }
-            }
-        });
-        server.start();
-        System.out.println("Server started at http://localhost:8080");
-    }
-
-    @AfterAll
-    static void tearDown() {
-        server.stop(0);
-    }
+//    @AfterAll
+//    static void tearDown() {
+//        server.stop(0);
+//    }
 
     @Test
     public void registrationAPITest() {
