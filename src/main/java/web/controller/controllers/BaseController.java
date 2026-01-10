@@ -4,6 +4,7 @@ import application.command.Command;
 import application.usecase.usecaseimpl.UseCase;
 import infra.config.mapper.Mapper;
 import tools.jackson.databind.ObjectMapper;
+import web.http.request.Request;
 
 public abstract class BaseController<Req, Cmd extends Command, Res> {
 
@@ -17,9 +18,9 @@ public abstract class BaseController<Req, Cmd extends Command, Res> {
         JsonMapper = new ObjectMapper();
     }
 
-    public String handle(String httpRequestBody) throws Exception {
+    public Res handle(Request httpRequest){
         // 1. JSON → Request DTO
-        Req request = JsonMapper.readValue(httpRequestBody, getRequestClass());
+        Req request = JsonMapper.readValue(httpRequest.getBody(), getRequestClass());
 
         // 2. Request DTO → Command
         Cmd command = mapper.toCommand(request);
@@ -28,10 +29,10 @@ public abstract class BaseController<Req, Cmd extends Command, Res> {
         Object result = useCase.execute(command);
 
         // 4. Command / Domain → Response DTO
-        Res response = mapper.toResponse(result);
+        return mapper.toResponse(result);
 
         // 5. Response DTO → JSON
-        return JsonMapper.writeValueAsString(response);
+        //return JsonMapper.writeValueAsString(response);
     }
 
     protected abstract Class<Req> getRequestClass();

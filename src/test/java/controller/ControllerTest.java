@@ -1,5 +1,6 @@
 package controller;
 
+import application.dto.out.user.RegisterUserDTOResponse;
 import application.usecase.registration.UserRegistrationUseCase;
 import domain.model.user.User;
 import domain.repository.PasswordEncoder;
@@ -9,6 +10,8 @@ import infra.security.PasswordEncoderSha256;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import web.controller.controllers.RegistrationUserController;
+import web.http.request.Request;
+import web.http.response.Response;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,15 +32,16 @@ public class ControllerTest {
 
     @Test
     void registrationController_success() throws Exception {
-        String requestJson = """
-                {
-                  "userName": "Aboba",
-                  "email": "test@test.com",
-                  "password": "12345"
-                }
-                """;
+        Request requestJson = new Request();
+//        String requestJson = """
+//                {
+//                  "userName": "Aboba",
+//                  "email": "test@test.com",
+//                  "password": "12345"
+//                }
+//                """;
 
-        String response = controller.handle(requestJson);
+        RegisterUserDTOResponse response = controller.handle(requestJson);
         String testResponse = "{\"message\":\"User register successfully\"}";
 
         User user = repo.findByUsername("Aboba").orElseThrow();

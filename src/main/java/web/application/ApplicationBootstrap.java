@@ -7,7 +7,7 @@ import infra.db.in_memory_repository.InMemoryUserRepository;
 import infra.security.PasswordEncoderSha256;
 import web.application.config.ApplicationConfig;
 import web.controller.controllers.RegistrationUserController;
-import web.routing.SunHttpSeverAdapter;
+import web.adapter.SunHttpSeverAdapter;
 
 public class ApplicationBootstrap {
     public Application start(ApplicationConfig conf) {

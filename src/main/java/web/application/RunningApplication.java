@@ -1,7 +1,7 @@
 package web.application;
 
 import web.controller.controllers.BaseController;
-import web.routing.SunHttpSeverAdapter;
+import web.adapter.SunHttpSeverAdapter;
 
 public class RunningApplication implements Application {
     private final SunHttpSeverAdapter server;
