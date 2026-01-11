@@ -1,13 +1,12 @@
 package web.http.request;
 
 import com.sun.net.httpserver.Headers;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class Request {
     public String httpMethod;
     public String path;

@@ -9,9 +9,10 @@ import infra.config.mapper.RegistrationUserMapper;
 public class RegistrationUserController extends BaseController<
         RegisterUserDTORequest,
         RegisterCommand,
+        String,
         RegisterUserDTOResponse
         > {
-    public RegistrationUserController(UseCase<RegisterCommand, ?> useCase) {
+    public RegistrationUserController(UseCase<RegisterCommand, String> useCase) {
         super(useCase, RegistrationUserMapper.instance);
     }
 

@@ -2,12 +2,11 @@ package application.usecase.registration;
 
 import application.command.registration.RegisterCommand;
 import application.usecase.usecaseimpl.UseCase;
-import domain.model.user.User;
 import domain.repository.PasswordEncoder;
 import domain.repository.UserRepository;
 import domain.service.AuthService;
 
-public class UserRegistrationUseCase implements UseCase<RegisterCommand, User> {
+public class UserRegistrationUseCase implements UseCase<RegisterCommand, String> {
 
     private final AuthService authService;
     private final Object lock = new Object();
@@ -17,9 +16,10 @@ public class UserRegistrationUseCase implements UseCase<RegisterCommand, User> {
     }
 
     @Override
-    public User execute(RegisterCommand command) {
+    public String execute(RegisterCommand command) {
         synchronized (lock) {
-           return authService.register(command.userName(), command.email(), command.password());
+            authService.register(command.userName(), command.email(), command.password());
         }
+        return "User registration successfully";
     }
 }

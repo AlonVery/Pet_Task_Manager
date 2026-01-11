@@ -1,21 +1,20 @@
 package web.http.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 //#todo: Реализовать polishing
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
     private int status;
-    private Map<String, String> headers;
+    private Map<String, String> headers = new HashMap<>();
     private byte[] body;
 
     public static Response ok(byte[] body) {
@@ -54,7 +53,7 @@ public class Response {
         return r;
     }
 
-    public void setHeaders(String key, String value) {
+    public void addHeader(String key, String value) {
         headers.put(key, value);
     }
 }

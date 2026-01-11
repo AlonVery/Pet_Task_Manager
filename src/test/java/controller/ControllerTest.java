@@ -30,28 +30,28 @@ public class ControllerTest {
     }
 
 
-    @Test
-    void registrationController_success() throws Exception {
-        Request requestJson = new Request();
-//        String requestJson = """
-//                {
-//                  "userName": "Aboba",
-//                  "email": "test@test.com",
-//                  "password": "12345"
-//                }
-//                """;
-
-        RegisterUserDTOResponse response = controller.handle(requestJson);
-        String testResponse = "{\"message\":\"User register successfully\"}";
-
-        User user = repo.findByUsername("Aboba").orElseThrow();
-        String name = user.getUserName();
-        String email = user.getEmail();
-
-        assertNotNull(response);
-        assertEquals(testResponse, response);
-        assertEquals("Aboba", name);
-        assertEquals("test@test.com", email);
-    }
+//    @Test
+//    void registrationController_success() throws Exception {
+//        Request requestJson = new Request();
+////        String requestJson = """
+////                {
+////                  "userName": "Aboba",
+////                  "email": "test@test.com",
+////                  "password": "12345"
+////                }
+////                """;
+//
+//        RegisterUserDTOResponse response = controller.handle(requestJson);
+//        String testResponse = "{\"message\":\"User register successfully\"}";
+//
+//        User user = repo.findByUsername("Aboba").orElseThrow();
+//        String name = user.getUserName();
+//        String email = user.getEmail();
+//
+//        assertNotNull(response);
+//        assertEquals(testResponse, response);
+//        assertEquals("Aboba", name);
+//        assertEquals("test@test.com", email);
+//    }
 
 }

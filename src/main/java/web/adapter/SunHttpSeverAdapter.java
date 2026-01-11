@@ -1,14 +1,16 @@
 package web.adapter;
 
 import com.sun.net.httpserver.HttpExchange;
-import web.handler.HttpHandler;
+import com.sun.net.httpserver.HttpHandler;
 import web.http.request.Request;
 import web.http.response.Response;
 import web.router.Router;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class SunHttpSeverAdapter implements HttpHandler {
+
     private final Router router;
 
     public SunHttpSeverAdapter(Router router) {
@@ -16,52 +18,41 @@ public class SunHttpSeverAdapter implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) {
-        Request request = toRequest(httpExchange);
+    public void handle(HttpExchange exchange) throws IOException {
+
+        Request request = toRequest(exchange);
         Response response = router.route(request);
-        try {
-            httpExchange.sendResponseHeaders(response.getStatus(), response.getBody().length);
-            httpExchange.getResponseBody().write(response.getBody());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        applyHeaders(exchange, response);
+
+        byte[] body = response.getBody();
+        exchange.sendResponseHeaders(
+                response.getStatus(),
+                body == null ? -1 : body.length
+        );
+
+        if (body != null) {
+            exchange.getResponseBody().write(body);
         }
+
+        exchange.getResponseBody().close();
     }
 
-
-    private Request toRequest(HttpExchange httpExchange) {
-        Request request = new  Request();
-        request.httpMethod = httpExchange.getRequestMethod();
-        request.path = httpExchange.getRequestURI().getPath();
-        request.headers = httpExchange.getRequestHeaders();
+    private Request toRequest(HttpExchange exchange) throws IOException {
+        Request request = new Request();
+        request.body = exchange.getRequestBody().readAllBytes();
+        request.httpMethod = exchange.getRequestMethod();
+        request.path = exchange.getRequestURI().getPath();
+        request.headers = exchange.getRequestHeaders();
         return request;
     }
 
-//    public void start(int port, Router router) {
-//        try {
-//            server = HttpServer.create(new InetSocketAddress(port), 0);
-//
-//            Request request = new Request(
-//                    exchange.getRequestMethod(),
-//                    exchange.getRequestURI().getPath(),
-//                    exchange.getRequestHeaders(),
-//                    exchange.getRequestBody().readAllBytes(),
-//                    router.getPathParams());
-//
-//            server.createContext("/users/registration", exchange -> {
-//                new RegistrationUserRoute(exchange, controller);
-//            });
-//
-//            server.start();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to start http server: ");
-//        }
-//    }
-//
-//    public void stop() {
-//        server.stop(0);
-//    }
-//
-//    public int getHttpPort() {
-//        return server.getAddress().getPort();
-//    }
+    private void applyHeaders(HttpExchange exchange, Response response) {
+        if (response.getHeaders() == null) return;
+
+        response.getHeaders().forEach(
+                (k, v) -> exchange.getResponseHeaders()
+                        .put(k, Collections.singletonList(v))
+        );
+    }
 }
