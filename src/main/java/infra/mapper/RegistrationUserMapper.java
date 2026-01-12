@@ -1,9 +1,8 @@
-package infra.config.mapper;
+package infra.mapper;
 
 import application.command.registration.RegisterCommand;
 import application.dto.in.user.RegisterUserDTORequest;
 import application.dto.out.user.RegisterUserDTOResponse;
-import domain.model.user.User;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 

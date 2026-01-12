@@ -4,7 +4,7 @@ import application.command.registration.RegisterCommand;
 import application.dto.in.user.RegisterUserDTORequest;
 import application.dto.out.user.RegisterUserDTOResponse;
 import application.usecase.usecaseimpl.UseCase;
-import infra.config.mapper.RegistrationUserMapper;
+import infra.mapper.RegistrationUserMapper;
 
 public class RegistrationUserController extends BaseController<
         RegisterUserDTORequest,

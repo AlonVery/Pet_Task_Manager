@@ -2,7 +2,7 @@ package web.controller.controllers;
 
 import application.command.Command;
 import application.usecase.usecaseimpl.UseCase;
-import infra.config.mapper.Mapper;
+import infra.mapper.Mapper;
 import tools.jackson.databind.ObjectMapper;
 import web.http.request.Request;
 

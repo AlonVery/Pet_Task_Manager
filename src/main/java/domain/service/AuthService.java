@@ -1,5 +1,6 @@
 package domain.service;
 
+import domain.exception.UserNotFoundException;
 import domain.model.user.User;
 import domain.model.user.UserRole;
 import domain.repository.PasswordEncoder;
@@ -24,14 +25,15 @@ public class AuthService {
         return user;
     }
 
-    public boolean login(String name, String rawPassword) {
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found"));
+    public String login(String name, String rawPassword) {
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "User with username '" + name + "' not found"
+                ));
         if (!user.isPasswordValid(rawPassword, encoder)) {
-            System.out.println("For this user: " + name + " invalid password" + rawPassword);
-            return false;
+            return ("For this user: " + name + " invalid password" + rawPassword);
         }
-        System.out.println("User " + name + " logged in successfully!");
-        return true;
+        return ("User " + name + " logged in successfully!");
     }
 
 }

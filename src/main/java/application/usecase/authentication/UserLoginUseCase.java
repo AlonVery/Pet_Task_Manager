@@ -6,17 +6,19 @@ import domain.repository.PasswordEncoder;
 import domain.repository.UserRepository;
 import domain.service.AuthService;
 
-public class UserLoginUseCase implements UseCase<LoginCommand, Boolean> {
+public class UserLoginUseCase implements UseCase<LoginCommand, String> {
     
     private final AuthService authService;
 
     public UserLoginUseCase(UserRepository userRepository, PasswordEncoder encoder) {
+        System.out.println("USERS AT LOGIN: " + userRepository.getAllUsers());
         this.authService = new AuthService(userRepository, encoder);
     }
 
     @Override
-    public Boolean execute(LoginCommand command) {
-        System.out.println("UserLoginUseCase execute");
+    public String execute(LoginCommand command) {
+        System.out.println(authService.login(command.username(), command.password()));
+        System.out.println("LOGIN ATTEMPT: '" + command.username() + "'");
         return authService.login(command.username(), command.password());
     }
 }

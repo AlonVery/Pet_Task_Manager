@@ -6,7 +6,7 @@ import application.dto.out.user.GetAllUsersDTOResponse;
 import application.usecase.usecaseimpl.UseCase;
 import domain.model.user.User;
 
-import static infra.config.mapper.GetAllUsersMapper.*;
+import static infra.mapper.GetAllUsersMapper.*;
 
 public class GetAllUsersController extends BaseController<
         GetAllUsersDTORequest,

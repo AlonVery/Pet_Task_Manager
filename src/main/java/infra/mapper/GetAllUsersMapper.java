@@ -1,10 +1,9 @@
-package infra.config.mapper;
+package infra.mapper;
 
 import application.command.registration.GetAllUsersCommand;
 import application.dto.in.user.GetAllUsersDTORequest;
 import application.dto.out.user.GetAllUsersDTOResponse;
 import domain.model.user.User;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
