@@ -29,6 +29,7 @@ public class GetAllUsersHandler implements Handler {
             Response response = new Response();
             response.setStatus(200); //OK
             response.addHeader("Content-Type", "application/json");
+            response.setBody(body);
             return response;
 
             //#todo: Handler — правильное место для маппинга ошибок в HTTP (400 / 409 / 422 / 500)

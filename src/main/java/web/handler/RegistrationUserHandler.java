@@ -2,6 +2,7 @@ package web.handler;
 
 import application.dto.out.user.RegisterUserDTOResponse;
 
+import domain.exception.UserAlreadyExistException;
 import tools.jackson.databind.ObjectMapper;
 import web.controller.controllers.RegistrationUserController;
 import web.http.request.Request;
@@ -23,8 +24,7 @@ public class RegistrationUserHandler implements Handler {
             RegisterUserDTOResponse dto = controller.handle(request);
 
             // 2. DTO → JSON
-            byte[] body = jsonMapper
-                    .writeValueAsBytes(dto);
+            byte[] body = jsonMapper.writeValueAsBytes(dto);
 
             // 3. HTTP Response
             Response response = new Response();
@@ -35,11 +35,9 @@ public class RegistrationUserHandler implements Handler {
             return response;
 
             //#todo: Handler — правильное место для маппинга ошибок в HTTP (400 / 409 / 422 / 500)
-        } catch (IllegalArgumentException e) {
+        } catch (UserAlreadyExistException | IllegalArgumentException e) {
             return Response.badRequest();
-
         } catch (Exception e) {
-            System.out.println();
             return Response.internalError();
         }
     }

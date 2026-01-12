@@ -35,12 +35,10 @@ public class AuthorizationHandler implements Handler {
             return response;
 
             //#todo: Handler — правильное место для маппинга ошибок в HTTP (400 / 409 / 422 / 500)
-        }catch (UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             return Response.notFound();
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return Response.badRequest();
-
         } catch (Exception e) {
             return Response.internalError();
         }

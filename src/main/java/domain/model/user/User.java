@@ -103,6 +103,6 @@ public class User {
                 ", userStatus=" + userStatus +
                 ", userRole=" + userRole +
                 ", createdAt=" + createdAt +
-                '}';
+                '}' + "\n";
     }
 }

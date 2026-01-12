@@ -1,5 +1,7 @@
 package domain.service;
 
+import domain.exception.InvalidCredentialsException;
+import domain.exception.UserAlreadyExistException;
 import domain.exception.UserNotFoundException;
 import domain.model.user.User;
 import domain.model.user.UserRole;
@@ -18,7 +20,7 @@ public class AuthService {
 
     public User register(String username, String email, String password) {
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalStateException("Email already in use");
+            throw new RuntimeException();
         }
         User user = User.create(username, email, password, UserRole.USER, encoder);
         userRepository.save(user);
@@ -26,12 +28,9 @@ public class AuthService {
     }
 
     public String login(String name, String rawPassword) {
-        User user = userRepository.findByUsername(name)
-                .orElseThrow(() -> new UserNotFoundException(
-                        "User with username '" + name + "' not found"
-                ));
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new UserNotFoundException(name));
         if (!user.isPasswordValid(rawPassword, encoder)) {
-            return ("For this user: " + name + " invalid password" + rawPassword);
+            throw new InvalidCredentialsException();
         }
         return ("User " + name + " logged in successfully!");
     }

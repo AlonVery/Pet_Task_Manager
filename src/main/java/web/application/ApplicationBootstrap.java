@@ -23,7 +23,6 @@ public class ApplicationBootstrap {
 
         UserRepository userRepository = new InMemoryUserRepository();
         //ProjectRepository projectRepository = new ProjectRepository(); //#todo: add project logic handler on response dir
-        System.out.println("USERS AT START: " + userRepository.getAllUsers());
 
         PasswordEncoder encoder = new PasswordEncoderSha256();
 

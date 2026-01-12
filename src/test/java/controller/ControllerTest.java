@@ -11,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import web.controller.controllers.RegistrationUserController;
 import web.http.request.Request;
-import web.http.response.Response;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ControllerTest {
     static UserRepository repo;
@@ -30,28 +30,28 @@ public class ControllerTest {
     }
 
 
-//    @Test
-//    void registrationController_success() throws Exception {
-//        Request requestJson = new Request();
-////        String requestJson = """
-////                {
-////                  "userName": "Aboba",
-////                  "email": "test@test.com",
-////                  "password": "12345"
-////                }
-////                """;
-//
-//        RegisterUserDTOResponse response = controller.handle(requestJson);
-//        String testResponse = "{\"message\":\"User register successfully\"}";
-//
-//        User user = repo.findByUsername("Aboba").orElseThrow();
-//        String name = user.getUserName();
-//        String email = user.getEmail();
-//
-//        assertNotNull(response);
-//        assertEquals(testResponse, response);
-//        assertEquals("Aboba", name);
-//        assertEquals("test@test.com", email);
-//    }
+    @Test
+    void registrationController_success() {
+        Request requestJson = new Request();
+//        String requestJson = """
+//                {
+//                  "userName": "Aboba",
+//                  "email": "test@test.com",
+//                  "password": "12345"
+//                }
+//                """;
+
+        RegisterUserDTOResponse response = controller.handle(requestJson);
+        String testResponse = "{\"message\":\"User register successfully\"}";
+
+        User user = repo.findByUsername("Aboba").orElseThrow();
+        String name = user.getUserName();
+        String email = user.getEmail();
+
+        assertNotNull(response);
+        assertEquals(testResponse, response);
+        assertEquals("Aboba", name);
+        assertEquals("test@test.com", email);
+    }
 
 }
