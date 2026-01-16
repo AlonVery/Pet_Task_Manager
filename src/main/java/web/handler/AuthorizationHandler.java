@@ -28,8 +28,8 @@ public class AuthorizationHandler implements Handler {
                     .writeValueAsBytes(dto);
 
             // 3. HTTP Response
-            Response response = new Response();
-            response.setStatus(200); // CREATED
+            new Response();
+            Response response = Response.ok(body);
             response.addHeader("Content-Type", "application/json");
             response.setBody(body);
             return response;

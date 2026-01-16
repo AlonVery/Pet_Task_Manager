@@ -27,8 +27,8 @@ public class RegistrationUserHandler implements Handler {
             byte[] body = jsonMapper.writeValueAsBytes(dto);
 
             // 3. HTTP Response
-            Response response = new Response();
-            response.setStatus(201); // CREATED
+            new Response();
+            Response response = Response.created(body);
             response.addHeader("Content-Type", "application/json");
             response.addHeader("qweqwe", "wertwete1123");
             response.setBody(body);
