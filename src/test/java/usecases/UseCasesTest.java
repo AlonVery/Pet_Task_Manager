@@ -1,7 +1,7 @@
 package usecases;
 
 import application.command.authentication.LoginCommand;
-import application.command.project_command.CreateProjectCommand;
+import application.command.project_command.CreateEmptyProjectCommand;
 import application.command.project_command.GetAllProjectCommand;
 import application.command.project_command.GetProjectCommand;
 import application.command.registration.GetAllUsersCommand;
@@ -45,7 +45,7 @@ public class UseCasesTest {
         StartTaskUseCase startTaskUseCase = new StartTaskUseCase();
         CompleteTaskUseCase completeTaskUseCase = new CompleteTaskUseCase();
         DeleteTaskUseCase deleteTaskUseCase = new DeleteTaskUseCase();
-        CreateProjectUseCase createProjectUseCase = new CreateProjectUseCase(projectRepository);
+        CreateEmptyProjectUseCase createEmptyProjectUseCase = new CreateEmptyProjectUseCase(projectRepository, userRepository);
         GetProjectUseCase getProjectUseCase = new GetProjectUseCase(projectRepository);
         UserRegistrationUseCase userRegistration = new UserRegistrationUseCase(userRepository, encoder);
         UserLoginUseCase userLogin = new UserLoginUseCase(userRepository, encoder);
@@ -59,7 +59,7 @@ public class UseCasesTest {
                 GetAllProjectCommand.class, getAllProjectsUseCase,
                 CompleteTaskCommand.class, completeTaskUseCase,
                 DeleteTaskCommand.class, deleteTaskUseCase,
-                CreateProjectCommand.class, createProjectUseCase,
+                CreateEmptyProjectCommand.class, createEmptyProjectUseCase,
                 GetProjectCommand.class, getProjectUseCase,
                 LoginCommand.class, userLogin,
                 RegisterCommand.class, userRegistration,
@@ -70,10 +70,10 @@ public class UseCasesTest {
 
     @Test
     public void mainTest() {
-        controller.createProject("Test Project_1");
-        controller.createProject("Test Project_2");
-        controller.createProject("Test Project_3");
-        controller.createProject("Test Project_4");
+        controller.createProject("test@asd.sada", "Test Project_1");
+        controller.createProject("test@asd.sada","Test Project_2");
+        controller.createProject("test@asd.sada","Test Project_3");
+        controller.createProject("test@asd.sada","Test Project_4");
         List<Project> list = controller.getAllProjects(); //#debug
         list.forEach(System.out::println);
         Assertions.assertEquals(4, list.size());
