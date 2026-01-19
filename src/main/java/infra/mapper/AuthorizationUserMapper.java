@@ -1,9 +1,8 @@
-package web.controller.controllers;
+package infra.mapper;
 
 import application.command.authentication.LoginCommand;
 import application.dto.in.user.AuthDTORequest;
 import application.dto.out.user.AuthDTOResponse;
-import infra.mapper.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 

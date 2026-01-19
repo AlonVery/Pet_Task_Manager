@@ -1,7 +1,7 @@
 package web.controller;
 
 import application.command.authentication.LoginCommand;
-import application.command.project_command.CreateProjectCommand;
+import application.command.project_command.CreateEmptyProjectCommand;
 import application.command.project_command.DeleteProjectCommand;
 import application.command.project_command.GetAllProjectCommand;
 import application.command.project_command.GetProjectCommand;
@@ -26,8 +26,8 @@ public class ProjectLocalController {
         this.dispatcher = dispatcher;
     }
 
-    public void createProject(String nameProject) {
-        dispatcher.dispatch(new CreateProjectCommand(nameProject));
+    public void createProject(String email, String projectName) {
+        dispatcher.dispatch(new CreateEmptyProjectCommand(email, projectName));
     }
 
     public void deleteProject(UUID projectId) {
@@ -58,11 +58,11 @@ public class ProjectLocalController {
         dispatcher.dispatch(new DeleteTaskCommand(taskId, user));
     }
 
-    public void registerUser(String userName, String email, String password){
+    public void registerUser(String userName, String email, String password) {
         dispatcher.dispatch(new RegisterCommand(userName, email, password));
     }
 
-    public boolean loginUser(String username, String password){
+    public boolean loginUser(String username, String password) {
         return dispatcher.dispatch(new LoginCommand(username, password));
     }
 

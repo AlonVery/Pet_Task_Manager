@@ -21,7 +21,7 @@ public class ProjectRepository implements ProjectRepositoryImpl {
     }
 
     @Override
-    public Project createEmptyProject(String projectName) {
+    public Project  createEmptyProject(String projectName) {
         return new Project(projectName, taskFactory);
     }
 
