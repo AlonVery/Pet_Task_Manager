@@ -38,21 +38,17 @@ public class ApplicationBootstrap {
         //project logic:
         CreateEmptyProjectUseCase createEmptyProjectUseCase = new CreateEmptyProjectUseCase(projectRepository, userRepository);
 
-
         //Controllers
         RegistrationUserController registrationUserController = new RegistrationUserController(userRegistrationUseCase);
         AuthorizationController authorizationController = new AuthorizationController(userLoginUseCase);
         GetAllUsersController getAllUsersController = new GetAllUsersController(getAllUsersUseCase);
         CreateEmptyProjectController createEmptyProjectController = new CreateEmptyProjectController(createEmptyProjectUseCase);
 
-
         //Handlers
-        RegistrationUserHandler registerHandler = new RegistrationUserHandler(registrationUserController);
-        AuthorizationHandler authorizationHandler = new AuthorizationHandler(authorizationController);
-        GetAllUsersHandler getAllUsersHandler = new GetAllUsersHandler(getAllUsersController);
-        CreateEmptyProjectControllerHandler createEmptyProjectControllerHandler = new CreateEmptyProjectControllerHandler(createEmptyProjectController);
-
-
+        var registerHandler = new RegistrationUserHandler(registrationUserController);
+        var authorizationHandler = new AuthorizationHandler(authorizationController);
+        var getAllUsersHandler = new GetAllUsersHandler(getAllUsersController);
+        var createEmptyProjectControllerHandler = new CreateEmptyProjectControllerHandler(createEmptyProjectController);
 
         //Router
         Router router = new Router();
@@ -61,14 +57,11 @@ public class ApplicationBootstrap {
         router.addRoute("POST", "/users/login", authorizationHandler);
         router.addRoute("POST", "/projects/create", createEmptyProjectControllerHandler);
 
-
         //Adapter
-        SunHttpSeverAdapter adapter =
-                new SunHttpSeverAdapter(router);
+        SunHttpSeverAdapter adapter = new SunHttpSeverAdapter(router);
 
         //Server
-        SunHttpServerLocal server =
-                new SunHttpServerLocal(conf.httpPort(), adapter);
+        SunHttpServerLocal server = new SunHttpServerLocal(conf.httpPort(), adapter);
 
         server.start();
     }
