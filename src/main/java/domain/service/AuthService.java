@@ -1,7 +1,6 @@
 package domain.service;
 
 import domain.exception.InvalidCredentialsException;
-import domain.exception.UserAlreadyExistException;
 import domain.exception.UserNotFoundException;
 import domain.model.user.User;
 import domain.model.user.UserRole;
@@ -11,7 +10,6 @@ import domain.repository.UserRepository;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-
 
     public AuthService(UserRepository userRepository, PasswordEncoder encoder) {
         this.encoder = encoder;
