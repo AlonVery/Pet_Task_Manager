@@ -25,12 +25,12 @@ public class AuthService {
         return user;
     }
 
-    public String login(String name, String rawPassword) {
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new UserNotFoundException(name));
+    public String login(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
         if (!user.isPasswordValid(rawPassword, encoder)) {
             throw new InvalidCredentialsException();
         }
-        return ("User " + name + " logged in successfully!");
+        return ("User logged in successfully!");
     }
 
 }

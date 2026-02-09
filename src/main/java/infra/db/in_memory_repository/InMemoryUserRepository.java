@@ -23,12 +23,13 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public void deleteById(UUID userId) {
+    public boolean deleteById(UUID userId) {
         User removed = users.remove(userId);
         if (removed != null) {
             emailIndex.remove(removed.getEmail());
             usernameIndex.remove(removed.getUserName());
         }
+        return false;
     }
 
     @Override

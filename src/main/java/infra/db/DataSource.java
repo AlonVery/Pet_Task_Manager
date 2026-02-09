@@ -14,7 +14,11 @@ public class DataSource {
     private DataSource() {
     }
 
-    public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+    public static Connection getConnection() {
+        try {
+            return ds.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

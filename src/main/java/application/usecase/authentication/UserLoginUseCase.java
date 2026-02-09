@@ -16,6 +16,6 @@ public class UserLoginUseCase implements UseCase<LoginCommand, String> {
 
     @Override
     public String execute(LoginCommand command) {
-        return authService.login(command.username(), command.password());
+        return authService.login(command.email(), command.password());
     }
 }

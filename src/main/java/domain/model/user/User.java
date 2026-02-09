@@ -23,9 +23,9 @@ public class User {
 
     private PasswordHash passwordHash;
     private UserStatus userStatus;
-    private final UserRole userRole;
+    private UserRole userRole;
 
-    private final Instant createdAt;
+    private Instant createdAt;
     private Instant updatedAt;
 
     /* --------- Конструктор (private) --------- */
@@ -46,6 +46,24 @@ public class User {
 
         this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
+    }
+
+    public User(UUID userId,
+                String userName,
+                String email,
+                PasswordHash passwordHash,
+                UserStatus userStatus,
+                UserRole userRole,
+                Instant createdAt,
+                Instant updatedAt) {
+        this.userId = userId;
+        this.userName = userName;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.userStatus = userStatus;
+        this.userRole = userRole;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     /* --------- Фабрика --------- */
@@ -97,12 +115,14 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", userStatus=" + userStatus +
-                ", userRole=" + userRole +
-                ", createdAt=" + createdAt +
-                '}' + "\n";
+               "userId=" + userId +
+               ", userName='" + userName + '\'' +
+               ", email='" + email + '\'' +
+               ", passwordHash=" + passwordHash +
+               ", userStatus=" + userStatus +
+               ", userRole=" + userRole +
+               ", createdAt=" + createdAt +
+               ", updatedAt=" + updatedAt +
+               '}' + '\n';
     }
 }

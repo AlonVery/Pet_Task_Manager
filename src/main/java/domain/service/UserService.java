@@ -1,10 +1,7 @@
 package domain.service;
 
 import domain.model.user.User;
-import domain.model.user.UserRole;
-import domain.repository.PasswordEncoder;
 import domain.repository.UserRepository;
-import infra.security.PasswordEncoderBCrypt;
 
 import java.util.List;
 import java.util.UUID;

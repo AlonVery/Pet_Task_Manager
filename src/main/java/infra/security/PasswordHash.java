@@ -7,7 +7,7 @@ public final class PasswordHash {
     @Getter
     private final String value;
 
-    private PasswordHash(String value) {
+    public PasswordHash(String value) {
         this.value = value;
     }
 
