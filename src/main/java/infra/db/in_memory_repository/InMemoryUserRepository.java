@@ -62,19 +62,10 @@ public class InMemoryUserRepository implements UserRepository {
         return users.values().stream().anyMatch(u -> u.getEmail().equals(email));
     }
 
-    @Override
-    public boolean existsByUsername(String username) {
-        return users.values().stream().anyMatch(u -> u.getUserName().equals(username));
-    }
 
     @Override
     public List<User> getAllUsers() {
         return List.copyOf(users.values());
     }
-
-    public void clear() {
-        users.clear();
-        emailIndex.clear();
-        usernameIndex.clear();
-    }
+    
 }

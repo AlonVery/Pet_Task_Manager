@@ -6,7 +6,6 @@ import application.usecase.registration.GetAllUsersUseCase;
 import application.usecase.registration.UserRegistrationUseCase;
 import domain.repository.PasswordEncoder;
 import domain.repository.UserRepository;
-import infra.db.DataSource;
 import infra.db.jpa_entity.JdbcUserRepository;
 import infra.db.jpa_entity.project.ProjectRepository;
 import infra.security.PasswordEncoderSha256;
@@ -23,14 +22,12 @@ import web.handler.project.CreateEmptyProjectControllerHandler;
 import web.router.Router;
 import web.server.SunHttpServerLocal;
 
-import java.sql.Connection;
 
 public class ApplicationBootstrap {
     public void start(ApplicationConfig conf) {
-        final Connection connection = DataSource.getConnection();
 
         // UserRepository userRepository = new InMemoryUserRepository();
-        UserRepository userRepository = new JdbcUserRepository(connection);
+        UserRepository userRepository = new JdbcUserRepository();
         ProjectRepository projectRepository = new ProjectRepository(); //#todo: add project logic handler on response dir
 
         PasswordEncoder encoder = new PasswordEncoderSha256();

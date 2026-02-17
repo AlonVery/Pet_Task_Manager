@@ -16,13 +16,12 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public User register(String username, String email, String password) {
+    public void register(String username, String email, String password) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException();
+            throw new UserNotFoundException("Email already exists: " + email);
         }
         User user = User.create(username, email, password, UserRole.USER, encoder);
         userRepository.save(user);
-        return user;
     }
 
     public String login(String email, String rawPassword) {
