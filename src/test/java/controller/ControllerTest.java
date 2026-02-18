@@ -30,7 +30,7 @@ public class ControllerTest {
     }
 
 
-    @Test
+    @Test 
     void registrationController_success() {
         Request requestJson = new Request();
 //        String requestJson = """
