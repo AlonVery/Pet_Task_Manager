@@ -20,11 +20,11 @@ public class UserRegistrationUseCase implements UseCase<RegisterCommand, String>
     @Override
     public String execute(RegisterCommand command) {
         synchronized (lock) {
-//            try {
+            try {
                 authService.register(command.userName(), command.email(), command.password());
-//            } catch (RuntimeException e) {
-//                throw new UserAlreadyExistException("Email already in use");
-//            }
+            } catch (RuntimeException e) {
+                throw new UserAlreadyExistException("User already exist by email: " + command.email());
+            }
         }
         return "User registration successfully";
     }

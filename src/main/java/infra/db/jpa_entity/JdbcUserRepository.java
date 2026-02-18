@@ -162,20 +162,16 @@ public class JdbcUserRepository implements UserRepository {
         String query = "SELECT * FROM users WHERE email = ?";
         try (Connection connection = DataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
+
             ps.setString(1, email);
+
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    UserStatus status = UserStatus.valueOf(rs.getString("user_status").toUpperCase());
-                    UserRole role = UserRole.valueOf(rs.getString("user_role").toUpperCase());
-                    if (status.equals(UserStatus.ACTIVE) && role.equals(UserRole.USER)) {
-                        return true;
-                    }
-                }
+                return rs.next();
             }
+            
         } catch (SQLException e) {
             throw new RuntimeException("Error find user by email: " + email, e);
         }
-        return false;
     }
 
     @Override

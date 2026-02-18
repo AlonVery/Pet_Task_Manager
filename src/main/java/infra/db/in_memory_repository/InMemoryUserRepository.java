@@ -39,16 +39,12 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return users.values().stream()
-                .filter(u -> Objects.equals(u.getEmail(), email))
-                .findFirst();
+        return users.values().stream().filter(u -> Objects.equals(u.getEmail(), email)).findFirst();
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return users.values().stream()
-                .filter(u -> u.getUserName().equals(username))
-                .findFirst();
+        return users.values().stream().filter(u -> u.getUserName().equals(username)).findFirst();
     }
 
     @Override
@@ -62,10 +58,9 @@ public class InMemoryUserRepository implements UserRepository {
         return users.values().stream().anyMatch(u -> u.getEmail().equals(email));
     }
 
-
     @Override
     public List<User> getAllUsers() {
         return List.copyOf(users.values());
     }
-    
+
 }

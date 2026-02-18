@@ -8,6 +8,8 @@ import web.controller.controllers.RegistrationUserController;
 import web.http.request.Request;
 import web.http.response.Response;
 
+import java.nio.charset.StandardCharsets;
+
 public class RegistrationUserHandler implements Handler {
 
     private final RegistrationUserController controller;
@@ -27,17 +29,25 @@ public class RegistrationUserHandler implements Handler {
             byte[] body = jsonMapper.writeValueAsBytes(dto);
 
             // 3. HTTP Response
-            new Response();
             Response response = Response.created(body);
             response.addHeader("Content-Type", "application/json");
-            response.addHeader("qweqwe", "wertwete1123");
+            response.addHeader("test", "test");
             response.setBody(body);
             return response;
 
             //#todo: Handler — правильное место для маппинга ошибок в HTTP (400 / 409 / 422 / 500)
-        } catch (UserAlreadyExistException | IllegalArgumentException e) {
-            return Response.badRequest();
-        } catch (Exception e) {
+        } catch (UserAlreadyExistException e) {
+            // 1. Application result
+            RegisterUserDTOResponse dto = new RegisterUserDTOResponse(e.getMessage());
+            // 2. DTO → JSON
+            byte[] body = jsonMapper.writeValueAsBytes(dto);
+            // 3. HTTP Response
+            Response response = Response.conflictError(body);
+            response.addHeader("Content-Type", "application/json");
+            response.addHeader("test", "test");
+            response.setBody(body);
+            return response;
+        } catch (RuntimeException e) {
             return Response.internalError();
         }
     }

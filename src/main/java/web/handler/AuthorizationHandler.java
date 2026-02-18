@@ -36,7 +36,15 @@ public class AuthorizationHandler implements Handler {
 
             //#todo: Handler — правильное место для маппинга ошибок в HTTP (400 / 409 / 422 / 500)
         } catch (UserNotFoundException e) {
-            return Response.notFound();
+            // 1. Application result
+            AuthDTOResponse dto = new AuthDTOResponse(e.getMessage());
+            // 2. DTO → JSON
+            byte[] body = jsonMapper.writeValueAsBytes(dto);
+            // 3. HTTP Response
+            Response response = Response.notFound(body);
+            response.addHeader("Content-Type", "application/json");
+            response.setBody(body);
+            return response;
         } catch (IllegalArgumentException e) {
             return Response.badRequest();
         } catch (Exception e) {

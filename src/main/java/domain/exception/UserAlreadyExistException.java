@@ -1,10 +1,8 @@
 package domain.exception;
 
-import java.util.Arrays;
-
 public class UserAlreadyExistException extends RuntimeException {
     public UserAlreadyExistException(String message) {
-        System.out.println("UserAlreadyExistException: " + message + Arrays.toString(getStackTrace()));
+        super(message);
     }
 
     public UserAlreadyExistException(String message, Throwable cause) {

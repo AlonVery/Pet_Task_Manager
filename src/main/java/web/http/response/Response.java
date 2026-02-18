@@ -31,6 +31,13 @@ public class Response {
         return r;
     }
 
+    public static Response notFound(byte[] body) {
+        Response r = new Response();
+        r.status = 404;
+        r.body = body;
+        return r;
+    }
+
     public static Response notFound() {
         Response r = new Response();
         r.status = 404;
@@ -50,6 +57,13 @@ public class Response {
         r.status = 500;
         String message = "Internal Server Error";
         r.body = message.getBytes();
+        return r;
+    }
+
+    public static Response conflictError(byte[] body) {
+        Response r = new Response();
+        r.status = 409;
+        r.body = body;
         return r;
     }
 
