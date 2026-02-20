@@ -11,8 +11,7 @@ public abstract class BaseController<ReqDto, Cmd extends Command, Res, RespDto> 
     private final Mapper<ReqDto, Cmd, Res, RespDto> mapper;
     private final ObjectMapper jsonMapper = new ObjectMapper();
 
-    protected BaseController(UseCase<Cmd, Res> useCase,
-                             Mapper<ReqDto, Cmd, Res, RespDto> mapper) {
+    protected BaseController(UseCase<Cmd, Res> useCase, Mapper<ReqDto, Cmd, Res, RespDto> mapper) {
         this.useCase = useCase;
         this.mapper = mapper;
     }
@@ -37,9 +36,6 @@ public abstract class BaseController<ReqDto, Cmd extends Command, Res, RespDto> 
         if (raw.trim().isEmpty()) {
             return newEmptyRequestDtoOrNull();
         }
-
-
-
         try {
             return jsonMapper.readValue(httpRequest.getBody(), getRequestClass());
         } catch (Exception e) {
@@ -50,17 +46,17 @@ public abstract class BaseController<ReqDto, Cmd extends Command, Res, RespDto> 
     }
 
     private ReqDto newEmptyRequestDtoOrNull() {
-        try{
-            return  getRequestClass().getDeclaredConstructor().newInstance();
-        }catch (NoSuchMethodException e) {
+        try {
+            return getRequestClass().getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
             // Жёсткий, но честный вариант: если DTO нельзя создать без body,
             // значит для этого endpoint body обязателен.
-            throw new IllegalArgumentException(
-                    "Request body is empty, and " + getRequestClass().getSimpleName()
-                            + " has no no-args constructor. Either provide JSON body or use a different controller base for no-body requests."
-            );
+            throw new IllegalArgumentException("Request body is empty, and "
+                                               + getRequestClass().getSimpleName() +
+                                               " has no no-args constructor. Either provide JSON body or use a different controller base for no-body requests.");
         } catch (Exception e) {
-            throw new RuntimeException("Failed to instantiate request DTO " + getRequestClass().getSimpleName(), e);
+            throw new RuntimeException(
+                    "Failed to instantiate request DTO " + getRequestClass().getSimpleName(), e);
         }
     }
 
