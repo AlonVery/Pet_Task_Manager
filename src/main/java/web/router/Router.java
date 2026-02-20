@@ -14,7 +14,7 @@ public class Router {
     public Response route(Request request) {
         for (Route route : routes) {
             if (route.matches(request)) {
-                route.fillPathParams(request);
+                //route.fillPathParams(request);
                 return route.handler().handle(request);
             }
         }

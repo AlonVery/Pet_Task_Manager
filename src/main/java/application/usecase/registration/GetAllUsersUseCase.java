@@ -17,6 +17,14 @@ public class GetAllUsersUseCase implements UseCase<GetAllUsersCommand, List<User
 
     @Override
     public List<User> execute(GetAllUsersCommand command) {
+        //todo:
+        /*
+        * List<User> execute(GetAllUsersCommand command){
+        * if(command,query().isEmpty()){
+        * return userRepository.getAllUsers();
+        * }
+        * return userRepository.getUsersByQuery(command.query()); <- Тут передаю в репозиторий мапу с квери, чтоб уже в репозитории раскрыть и найти то, что нужно
+        * */
         return userRepository.getAllUsers();
     }
 }
