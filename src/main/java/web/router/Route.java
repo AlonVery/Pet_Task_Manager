@@ -6,7 +6,7 @@ import web.http.request.Request;
 public record Route(String method, String path, Handler handler) {
     public boolean matches(Request request){
         if(request.httpMethod.equals(method)){
-            return request.path.equals(path);
+            return request.path.equals(request.getCleanPath());
         }
         return false;
     }
